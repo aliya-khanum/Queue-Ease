@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Queue Ease</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="add-shop.html">Add Shop</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact Us</a></li>
+    
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Queue Ease</h1>
+    <input type="text" id="search" placeholder="Search location">
+    <div id="shops" class="shops-container"></div>
+  </main>
+<br>
+<br>
+  <footer>
+    <p>&copy; 2024 Queue Ease. All rights reserved.</p>
+  </footer>
+
+  <script>
+    //n
+    document.addEventListener('DOMContentLoaded', () => {
+  const searchInput = document.getElementById('search');
+  const shopsContainer = document.getElementById('shops');
+
+  // Function to fetch and display shops
+  async function searchLocations() {
+    const query = searchInput.value.trim();
+
+    if (query.length < 2) {
+      shopsContainer.innerHTML = '<p>Please type at least two letters to search.</p>';
+      return;
+    }
+
+    try {
+      const response = await fetch(`/search-shops?query=${encodeURIComponent(query)}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch shops');
+      }
+
+      const shops = await response.json();
+      shopsContainer.innerHTML = ''; // Clear previous results
+
+      if (shops.length === 0) {
+        shopsContainer.innerHTML = '<p>No shops found for this location.</p>';
+        return;
+      }
+
+      // Display matching shops
+      shops.forEach(shop => {
+        const shopCard = document.createElement('div');
+        shopCard.classList.add('shop-card');
+        shopCard.innerHTML = `
+          <h2>${shop.shopName}</h2>
+          <p>${shop.shopAddress}</p>
+          <a href="shop-details.html?shopId=${shop._id}">View Details</a>
+        `;
+        shopsContainer.appendChild(shopCard);
+      });
+    } catch (error) {
+      console.error('Error fetching shops:', error);
+      shopsContainer.innerHTML = '<p>Error fetching shops. Please try again later.</p>';
+    }
+  }
+
+  // Attach event listener to search input
+  searchInput.addEventListener('input', searchLocations);
+});
+
+    //n
+
+    // Fetch shops and display them
+    async function fetchShops() {
+      try {
+        const response = await fetch('/shops'); // API endpoint to fetch shops
+        if (!response.ok) {
+          console.error('Failed to fetch shops:', response.statusText);
+          document.getElementById('shops').innerHTML = '<p>Error loading shops. Please try again later.</p>';
+          return;
+        }
+        const shops = await response.json();
+
+        
+
+        const container = document.getElementById('shops');
+        container.innerHTML = ''; // Clear previous data
+        if (shops.length === 0) {
+          container.innerHTML = '<p>No shops found. Add a shop to get started!</p>';
+          return;
+        }
+
+
+        shops.forEach(shop => {
+          const shopCard = document.createElement('div');
+          shopCard.classList.add('shop-card');
+          shopCard.innerHTML = `
+            <h2>${shop.shopName}</h2>
+            <p>${shop.shopAddress}</p>
+            <a href="shop-details.html?shopId=${shop._id}">View Details</a>
+          `;
+          container.appendChild(shopCard);
+        });
+      } catch (error) {
+        console.error('Error fetching shops:', error);
+        document.getElementById('shops').innerHTML = '<p>Error fetching shops. Please try again later.</p>';
+      }
+    }
+
+    // Call the function to fetch and display shops
+    document.addEventListener('DOMContentLoaded', fetchShops);
+
+
+
+   
+
+
+  </script>
+</body>
+</html>

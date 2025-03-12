@@ -1,0 +1,239 @@
+<!--<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Send Files</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Send Files to <span id="shopName"></span></h1>
+    <form id="sendFileForm" method="POST" enctype="multipart/form-data" action="/send-files">
+      <input type="hidden" name="shopId" value="" />
+
+      <label for="customerEmail">Your Email:</label>
+      <input type="email" name="customerEmail" id="customerEmail" required />
+      
+      <label for="customerPassword">Your Email Password:</label>
+      <input type="password" name="customerPassword" id="customerPassword" required />
+
+
+      <label for="copies">Number of Copies:</label>
+      <input type="number" name="copies" id="copies" required />
+
+      <label for="color">Color:</label>
+      <select name="color" id="color" required>
+        <option value="color">Color</option>
+        <option value="black-and-white">Black and White</option>
+      </select>
+      <label for="file">Upload File:</label>
+      <input type="file" name="file" id="file" required />
+      <button type="submit">Send File</button>
+    </form>
+    
+  </main>
+
+  <script>/*
+    // Get shop details from URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const shopId = urlParams.get('shopId');
+
+    
+
+    // Display the shop name dynamically
+    async function fetchShop() {
+      const response = await fetch(`/shops/${shopId}`);
+      const shop = await response.json();
+      document.getElementById('shopName').innerText = shop.shopName;
+    }
+
+    fetchShop();
+
+    // Handle form submission
+    document.getElementById('sendFileForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const formData = new FormData(event.target);
+      formData.append('shopId', shopId);
+
+      const response = await fetch('/send-files', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        alert('File sent successfully!');
+        window.location.href = '/';
+      } else {
+        alert('Error sending file. Please try again.');
+      }
+    });*/
+
+    // Assume `shopId` is passed via URL parameters like `/shop-details.html?shopId=12345`
+//const params = new URLSearchParams(window.location.search);
+//const shopId = params.get('shopId');
+
+// Check if shopId is present in the URL
+/*if (!shopId) {
+  alert('Error finding shop details: Invalid or missing shopId');
+} else {
+  console.log('Shop ID:', shopId);
+  fetchShopDetails(shopId);
+}*/
+
+// Function to fetch shop details and update the page
+async function fetchShopDetails(shopId) {
+  try {
+    const response = await fetch(`/shops/${shopId}`);
+    if (!response.ok) {
+      if (response.status === 400) {
+        throw new Error('Invalid Shop ID');
+      } else if (response.status === 404) {
+        throw new Error('Shop not found');
+      } else {
+        throw new Error('Error fetching shop details');
+      }
+    }
+    const shop = await response.json();
+    console.log('Shop Details:', shop);
+
+    // Display shop details on the page
+    document.getElementById('shop-name').textContent = shop.shopName;
+    document.getElementById('shop-address').textContent = shop.shopAddress;
+    document.getElementById('owner-name').textContent = shop.ownerName;
+    document.getElementById('owner-email').textContent = shop.ownerEmail;
+    document.getElementById('phone-number').textContent = shop.phoneNumber;
+  } catch (error) {
+    console.error('Error fetching shop details:', error);
+    alert(error.message);
+  }
+}
+
+const urlParams = new URLSearchParams(window.location.search);
+const shopId = urlParams.get('shopId');
+
+if (!shopId) {
+  alert('Error: Missing Shop ID');
+} else {
+  fetchShopDetails(shopId);
+}
+
+  </script>
+</body>
+</html>
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Send Files</title>
+  <link rel="stylesheet" href="stylesshop.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="/index">Home</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Send Files to <span id="shopName"></span></h1>
+    <form id="sendFileForm" method="POST" enctype="multipart/form-data">
+      <input type="hidden" name="shopId" id="shopId" />
+
+      <label for="customerEmail">Your Email:</label>
+      <input type="email" name="customerEmail" id="customerEmail" required />
+
+      <label for="customerPassword">Your Email Password:</label>
+      <input type="password" name="customerPassword" id="customerPassword" required />
+
+      <label for="copies">Number of Copies:</label>
+      <input type="number" name="copies" id="copies" required />
+
+      <label for="color">Color:</label>
+      <select name="color" id="color" required>
+        <option value="color">Color</option>
+        <option value="black-and-white">Black and White</option>
+      </select>
+
+      <label for="file">Upload File:</label>
+      <input type="file" name="file" id="file" required />
+
+      <label for="file">Payment Screenshot</label>
+      <input type="file" name="file" id="file" required />
+
+      
+      <!-- <a href="Razor_pay/" required>Pay Here</a> -->
+
+      <button type="submit">Send File</button>
+    </form>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Queue Ease. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const shopId = urlParams.get('shopId');
+
+    if (!shopId) {
+      alert('Error: Missing Shop ID');
+    } else {
+      fetchShopDetails(shopId);
+    }
+
+    async function fetchShopDetails(shopId) {
+      try {
+        const response = await fetch(`/shops/${shopId}`);
+        if (!response.ok) throw new Error(`Error fetching shop details: ${response.statusText}`);
+
+        const shop = await response.json();
+        document.getElementById('shopName').textContent = shop.shopName;
+        document.getElementById('shopId').value = shopId;
+      } catch (error) {
+        console.error('Error fetching shop details:', error);
+        alert(error.message);
+      }
+    }
+
+    document.getElementById('sendFileForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const formData = new FormData(event.target);
+
+      try {
+        const response = await fetch('/send-files', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(errorText);
+        }
+
+        alert('File sent successfully!');
+        window.location.href = '/';
+      } catch (error) {
+        console.error('Error sending file:', error);
+        alert(`Error sending file: ${error.message}`);
+      }
+    });
+  </script>
+</body>
+</html>
